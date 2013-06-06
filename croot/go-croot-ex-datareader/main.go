@@ -17,12 +17,12 @@ func main() {
 	flag.Parse()
 
 	if *fname == "" {
-		fmt.Fprintf(os.Stderr, "**error** you need to give a ROOT file to read")
+		fmt.Fprintf(os.Stderr, "**error** you need to give a ROOT file to read\n")
 		os.Exit(1)
 	}
 
 	if *tname == "" {
-		fmt.Fprintf(os.Stderr, "**error** you need to give a TTree name to read")
+		fmt.Fprintf(os.Stderr, "**error** you need to give a TTree name to read\n")
 		os.Exit(1)
 	}
 
