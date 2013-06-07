@@ -40,19 +40,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	stddev_1 := 5.0
-	mean_1 := 0.0
-
-	stddev_2 := 3.0
-	mean_2 := 2.5
+	stddev := 5.0
+	mean := 0.0
 
 	for i := 0; i < *nentries; i++ {
 		do_display := i%(*nentries/10) == 0
 		if do_display {
 			fmt.Printf(":: filling entry %d...\n", i)
 		}
-		x_1 := rand.NormFloat64()*stddev_1 + mean_1
-		x_2 := rand.NormFloat64()*stddev_2 + mean_2
+		x_1 := rand.NormFloat64()*stddev + mean
+		x_2 := croot.GRandom.Gaus(mean, stddev)
 
 		h1.Fill(x_1, 1)
 		h2.Fill(x_2, 1)
