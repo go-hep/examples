@@ -24,3 +24,6 @@ $ go get github.com/go-hep/examples/...
   
 - `croot/go-croot-ex-hist` shows how to fill a `ROOT::TH1F` histogram
 
+- `hplot/hplot-ex-hist` shows how to fill and plot a `hist.Hist1D`
+  histogram
+
