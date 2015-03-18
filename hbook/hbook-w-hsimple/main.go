@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"os"
 
-	"github.com/go-hep/hbook"
-	"github.com/go-hep/rio"
+	"github.com/go-hep/sw/hbook"
+	"github.com/go-hep/sw/rio"
 )
 
 var (
@@ -69,12 +69,12 @@ func main() {
 	)
 
 	fmt.Printf(":: saving histos to [%s]...\n", *fname)
-	err = write(w, "h1", h1)
+	err = w.WriteValue("h1", h1)
 	if err != nil {
 		panic(err)
 	}
 
-	err = write(w, "h2", h2)
+	err = w.WriteValue("h2", h2)
 	if err != nil {
 		panic(err)
 	}
@@ -89,27 +89,4 @@ func main() {
 		panic(err)
 	}
 
-}
-
-func write(w *rio.Writer, name string, obj interface{}) error {
-	var err error
-
-	rec := w.Record(name)
-	err = rec.Connect(name, obj)
-	if err != nil {
-		return err
-	}
-
-	blk := rec.Block(name)
-	err = blk.Write(obj)
-	if err != nil {
-		return err
-	}
-
-	err = rec.Write()
-	if err != nil {
-		return err
-	}
-
-	return err
 }
