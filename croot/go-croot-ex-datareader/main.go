@@ -35,7 +35,7 @@ func main() {
 
 	defer f.Close("")
 
-	t := f.GetTree(*tname)
+	t := f.Get(*tname).(croot.Tree)
 	evt, err := NewDataReader(t)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "**error** %v\n", err)

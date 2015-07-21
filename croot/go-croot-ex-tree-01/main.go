@@ -22,7 +22,7 @@ var evtmax *int64 = flag.Int64("evtmax", -1, "number of events to read")
 var fname *string = flag.String("fname", "event.root", "file to read back")
 
 func tree0(f croot.File) {
-	t := f.GetTree("tree")
+	t := f.Get("tree").(croot.Tree)
 
 	e := Event{}
 	t.SetBranchAddress("evt_i", &e.I)
