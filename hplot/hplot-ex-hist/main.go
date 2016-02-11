@@ -6,13 +6,11 @@ import (
 	"math/rand"
 
 	"github.com/go-hep/hplot"
-	"github.com/go-hep/hplot/plotinum/plotter"
-	"github.com/go-hep/hplot/plotinum/vg"
+	"github.com/gonum/plot/plotter"
+	"github.com/gonum/plot/vg"
 )
 
 const NPOINTS = 10000
-
-var HMAX = 1.0
 
 func main() {
 	// Draw some random values from the standard
@@ -40,9 +38,8 @@ func main() {
 	}
 	// Normalize the area under the histogram to
 	// sum to one.
-	//h.Normalize(1)
+	h.Hist.Scale(1 / h.Hist.Integral())
 	p.Add(h)
-	HMAX = h.Hist.Max() / stdNorm(0)
 
 	// Draw a grid behind the data
 	p.Add(hplot.NewGrid())
@@ -55,11 +52,11 @@ func main() {
 
 	p.Add(plotter.NewGlyphBoxes())
 	// Save the plot to a PNG file.
-	if err := p.Save(4, 4, "hist.png"); err != nil {
+	if err := p.Save(-1, -1, "hist.png"); err != nil {
 		panic(err)
 	}
 	// Save the plot to a PDF file.
-	if err := p.Save(6, 4, "hist.pdf"); err != nil {
+	if err := p.Save(-1, -1, "hist.pdf"); err != nil {
 		panic(err)
 	}
 }
@@ -70,7 +67,7 @@ func stdNorm(x float64) float64 {
 	const sigma = 1.0
 	const mu = 0.0
 	const root2pi = 2.50662827459517818309
-	return 1.0 / (sigma * root2pi) * math.Exp(-((x-mu)*(x-mu))/(2*sigma*sigma)) * HMAX
+	return 1.0 / (sigma * root2pi) * math.Exp(-((x-mu)*(x-mu))/(2*sigma*sigma))
 }
 
 // EOF

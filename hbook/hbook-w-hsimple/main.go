@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"os"
 
-	"github.com/go-hep/sw/hbook"
-	"github.com/go-hep/sw/rio"
+	"github.com/go-hep/hbook"
+	"github.com/go-hep/rio"
 )
 
 var (
