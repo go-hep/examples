@@ -2,7 +2,7 @@ package main
 
 import (
 	"compress/flate"
-	"flag"
+	"encoding/gob"
 	"fmt"
 	"math/rand"
 	"os"
@@ -11,31 +11,22 @@ import (
 	"github.com/go-hep/rio"
 )
 
-var (
-	fname = flag.String("o", "hsimple.rio", "output file name")
-)
-
 func main() {
-	flag.Parse()
+	var err error
+	h1, h2 := genHistos()
 
-	fmt.Printf(":: creating output file [%s]...\n", *fname)
-	f, err := os.Create(*fname)
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-
-	w, err := rio.NewWriter(f)
-	if err != nil {
-		panic(err)
-	}
-	defer w.Close()
-
-	err = w.SetCompressor(rio.CompressZlib, flate.DefaultCompression)
+	err = writeRio("hsimple.rio", h1, h2)
 	if err != nil {
 		panic(err)
 	}
 
+	err = writeGob("hsimple.gob", h1, h2)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func genHistos() (*hbook.H1D, *hbook.H1D) {
 	h1 := hbook.NewH1D(100, -10., 10.)
 	if h1 == nil {
 		panic(fmt.Errorf("nil pointer to H1D"))
@@ -68,25 +59,78 @@ func main() {
 		h2.Name(), h2.Entries(), h2.Mean(), h2.RMS(),
 	)
 
-	fmt.Printf(":: saving histos to [%s]...\n", *fname)
-	err = w.WriteValue("h1", h1)
+	return h1, h2
+}
+
+func writeRio(fname string, h1, h2 *hbook.H1D) error {
+
+	fmt.Printf(":: creating output file [%s]...\n", fname)
+	f, err := os.Create(fname)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	w, err := rio.NewWriter(f)
+	if err != nil {
+		return err
+	}
+	defer w.Close()
+
+	err = w.SetCompressor(rio.CompressZlib, flate.DefaultCompression)
 	if err != nil {
 		panic(err)
+	}
+
+	fmt.Printf(":: saving histos to [%s]...\n", fname)
+	err = w.WriteValue("h1", h1)
+	if err != nil {
+		return err
 	}
 
 	err = w.WriteValue("h2", h2)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	err = w.Close()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	err = f.Close()
 	if err != nil {
-		panic(err)
+		return err
 	}
+
+	return err
+}
+
+func writeGob(fname string, h1, h2 *hbook.H1D) error {
+	fmt.Printf(":: creating output file [%s]...\n", fname)
+	f, err := os.Create(fname)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	enc := gob.NewEncoder(f)
+	fmt.Printf(":: saving histos to [%s]...\n", fname)
+	err = enc.Encode(h1)
+	if err != nil {
+		return err
+	}
+
+	err = enc.Encode(h2)
+	if err != nil {
+		return err
+	}
+
+	err = f.Close()
+	if err != nil {
+		return err
+	}
+
+	return err
 
 }

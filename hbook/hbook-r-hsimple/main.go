@@ -1,7 +1,7 @@
 package main
 
 import (
-	"flag"
+	"encoding/gob"
 	"fmt"
 	"os"
 
@@ -9,15 +9,15 @@ import (
 	"github.com/go-hep/rio"
 )
 
-var (
-	fname = flag.String("i", "hsimple.rio", "input file name")
-)
-
 func main() {
-	flag.Parse()
 
-	fmt.Printf(":: opening input file [%s]...\n", *fname)
-	f, err := os.Open(*fname)
+	readRio("hsimple.rio")
+	readGob("hsimple.gob")
+}
+
+func readRio(fname string) {
+	fmt.Printf(":: opening input file [%s]...\n", fname)
+	f, err := os.Open(fname)
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +29,7 @@ func main() {
 	}
 	defer r.Close()
 
-	fmt.Printf(":: loading histos from [%s]...\n", *fname)
+	fmt.Printf(":: loading histos from [%s]...\n", fname)
 	var (
 		h1 hbook.H1D
 		h2 hbook.H1D
@@ -63,6 +63,44 @@ func main() {
 	}
 }
 
+func readGob(fname string) {
+	fmt.Printf(":: opening input file [%s]...\n", fname)
+	f, err := os.Open(fname)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	dec := gob.NewDecoder(f)
+
+	fmt.Printf(":: loading histos from [%s]...\n", fname)
+	var (
+		h1 hbook.H1D
+		h2 hbook.H1D
+	)
+
+	err = dec.Decode(&h1)
+	if err != nil {
+		panic(err)
+	}
+
+	err = dec.Decode(&h2)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s: entries=%v mean=%+8.3f RMS=%+8.3f\n",
+		h1.Name(), h1.Entries(), h1.Mean(), h1.RMS(),
+	)
+	fmt.Printf("%s: entries=%v mean=%+8.3f RMS=%+8.3f\n",
+		h2.Name(), h2.Entries(), h2.Mean(), h2.RMS(),
+	)
+
+	err = f.Close()
+	if err != nil {
+		panic(err)
+	}
+}
 func read(r *rio.Reader, name string, ptr interface{}) error {
 	var err error
 
