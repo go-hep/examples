@@ -46,10 +46,10 @@ func readRio(fname string) {
 	}
 
 	fmt.Printf("%s: entries=%v mean=%+8.3f RMS=%+8.3f\n",
-		h1.Name(), h1.Entries(), h1.Mean(), h1.RMS(),
+		h1.Name(), h1.Entries(), h1.XMean(), h1.XRMS(),
 	)
 	fmt.Printf("%s: entries=%v mean=%+8.3f RMS=%+8.3f\n",
-		h2.Name(), h2.Entries(), h2.Mean(), h2.RMS(),
+		h2.Name(), h2.Entries(), h2.XMean(), h2.XRMS(),
 	)
 
 	err = r.Close()
@@ -90,10 +90,10 @@ func readGob(fname string) {
 	}
 
 	fmt.Printf("%s: entries=%v mean=%+8.3f RMS=%+8.3f\n",
-		h1.Name(), h1.Entries(), h1.Mean(), h1.RMS(),
+		h1.Name(), h1.Entries(), h1.XMean(), h1.XRMS(),
 	)
 	fmt.Printf("%s: entries=%v mean=%+8.3f RMS=%+8.3f\n",
-		h2.Name(), h2.Entries(), h2.Mean(), h2.RMS(),
+		h2.Name(), h2.Entries(), h2.XMean(), h2.XRMS(),
 	)
 
 	err = f.Close()

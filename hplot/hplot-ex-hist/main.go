@@ -2,29 +2,45 @@ package main
 
 import (
 	"image/color"
-	"math"
+	"log"
 	"math/rand"
 
+	"github.com/go-hep/hbook"
 	"github.com/go-hep/hplot"
 	"github.com/gonum/plot/plotter"
 	"github.com/gonum/plot/vg"
+	"github.com/gonum/stat/distuv"
 )
 
-const NPOINTS = 10000
-
 func main() {
+	const npoints = 10000
+
+	// Create a normal distribution.
+	dist := distuv.Normal{
+		Mu:     0,
+		Sigma:  1,
+		Source: rand.New(rand.NewSource(0)),
+	}
+
 	// Draw some random values from the standard
 	// normal distribution.
-	rand.Seed(int64(0))
-	v := make(plotter.Values, NPOINTS)
-	for i := range v {
-		v[i] = rand.NormFloat64()
+	hist := hbook.NewH1D(20, -4, +4)
+	for i := 0; i < npoints; i++ {
+		v := dist.Rand()
+		hist.Fill(v, 1)
 	}
+
+	// normalize histogram
+	area := 0.0
+	for _, bin := range hist.Binning().Bins() {
+		area += bin.SumW() * bin.XWidth()
+	}
+	hist.Scale(1 / area)
 
 	// Make a plot and set its title.
 	p, err := hplot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf("error: %v\n", err)
 	}
 	p.Title.Text = "Histogram"
 	p.X.Label.Text = "X"
@@ -32,42 +48,29 @@ func main() {
 
 	// Create a histogram of our values drawn
 	// from the standard normal.
-	h, err := hplot.NewHist(v, 16)
+	h, err := hplot.NewH1D(hist)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	// Normalize the area under the histogram to
-	// sum to one.
-	h.Hist.Scale(1 / h.Hist.Integral())
+	h.Infos.Style = hplot.HInfoSummary
 	p.Add(h)
 
-	// Draw a grid behind the data
-	p.Add(hplot.NewGrid())
-
 	// The normal distribution function
-	norm := hplot.NewFunction(stdNorm)
+	norm := hplot.NewFunction(dist.Prob)
 	norm.Color = color.RGBA{R: 255, A: 255}
 	norm.Width = vg.Points(2)
 	p.Add(norm)
 
+	// draw a grid
+	p.Add(hplot.NewGrid())
+
 	p.Add(plotter.NewGlyphBoxes())
 	// Save the plot to a PNG file.
 	if err := p.Save(-1, -1, "hist.png"); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	// Save the plot to a PDF file.
 	if err := p.Save(-1, -1, "hist.pdf"); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
-
-// stdNorm returns the probability of drawing a
-// value from a standard normal distribution.
-func stdNorm(x float64) float64 {
-	const sigma = 1.0
-	const mu = 0.0
-	const root2pi = 2.50662827459517818309
-	return 1.0 / (sigma * root2pi) * math.Exp(-((x-mu)*(x-mu))/(2*sigma*sigma))
-}
-
-// EOF
