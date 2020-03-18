@@ -7,7 +7,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
 	"go-hep.org/x/hep/groot"
 	"go-hep.org/x/hep/groot/rsql"
 	_ "go-hep.org/x/hep/groot/rsql/rsqldrv"
@@ -21,13 +20,13 @@ import (
 func rsql1(fname string) error {
 	f, err := groot.Open(fname)
 	if err != nil {
-		return errors.Wrap(err, "could not open ROOT file")
+		return fmt.Errorf("could not open ROOT file: %w", err)
 	}
 	defer f.Close()
 
 	o, err := f.Get("Events")
 	if err != nil {
-		return errors.Wrap(err, "could not retrieve tree")
+		return fmt.Errorf("could not retrieve tree: %w", err)
 	}
 
 	tree := o.(rtree.Tree)
@@ -35,7 +34,7 @@ func rsql1(fname string) error {
 
 	hmet, err := rsql.ScanH1D(tree, "SELECT MET_sumet FROM Events", hbook.NewH1D(100, 0, 2000))
 	if err != nil {
-		return errors.Wrap(err, "could not scan tree")
+		return fmt.Errorf("could not scan tree: %w", err)
 	}
 
 	fmt.Printf("hmet: %v\n", hmet.SumW())
@@ -48,7 +47,7 @@ func rsql1(fname string) error {
 
 	err = p.Save(10*vg.Centimeter, -1, "01-rsql.png")
 	if err != nil {
-		return errors.Wrap(err, "could not save plot")
+		return fmt.Errorf("could not save plot: %w", err)
 	}
 
 	return nil

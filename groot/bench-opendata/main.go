@@ -6,13 +6,13 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/pkg/profile"
 
 	_ "go-hep.org/x/hep/groot/riofs/plugin/xrootd"
@@ -93,7 +93,7 @@ func main() {
 func runBench(id, fname string) error {
 	fct, ok := benchIDs[id]
 	if !ok {
-		return errors.Errorf("no such OpenData example: %q", id)
+		return fmt.Errorf("no such OpenData example: %q", id)
 	}
 
 	log.Printf("running %q...", id)
@@ -103,7 +103,7 @@ func runBench(id, fname string) error {
 	log.Printf("running %q... [err=%v] delta=%v", id, err, end.Sub(beg))
 
 	if err != nil {
-		return errors.Wrapf(err, "could not run bench %q", id)
+		return fmt.Errorf("could not run bench %q: %w", id, err)
 	}
 
 	return err
