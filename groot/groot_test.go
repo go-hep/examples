@@ -9,6 +9,14 @@ import (
 	"testing"
 )
 
+func TestWriteH1D(t *testing.T) {
+	cmd := exec.Command("go", "run", "./ex-hist-00.go")
+	err := cmd.Run()
+	if err != nil {
+		t.Fatalf("could not create histos: %+v", err)
+	}
+}
+
 func TestRWFlatTree(t *testing.T) {
 	cmd := exec.Command("go", "run", "./ex-tree-00.go")
 	err := cmd.Run()
