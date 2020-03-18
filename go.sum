@@ -22,10 +22,6 @@ github.com/frankban/quicktest v1.5.0/go.mod h1:jaStnuzAqU1AJdCO0l53JDCJrVDKcS03D
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
-github.com/go-hep/croot v0.0.0-20180530150216-2dce8cdaab80 h1:0FZFnAmo4/CNpwfX4jLd2q+pKSkzIRLilsAz6qTAQsM=
-github.com/go-hep/croot v0.0.0-20180530150216-2dce8cdaab80/go.mod h1:NKx/ET3O+rnqnoE9ca7hXKeCqbWh51aBTcg5/9km7sM=
-github.com/go-hep/random v0.0.0-20140624161735-ebaea20818e0 h1:hDXQUXkOa4ZLgVCmwjIj4Sk45ng37jmttTp/XfIadGI=
-github.com/go-hep/random v0.0.0-20140624161735-ebaea20818e0/go.mod h1:eA+Ja3PMyJYwLNa7iHVIKHELmsjKuX+0+fKNwirUCWo=
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 h1:DACJavvAHhabrF08vX0COfcOBJRhZ8lUbR+ZWIs0Y5g=
 github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0/go.mod h1:E/TSTwGwJL78qG/PmXZO1EjYhfJinVAhrmmHX6Z8B9k=
 github.com/golang/snappy v0.0.1/go.mod h1:/XxbfmMg8lxefKM7IXC3fBNl/7bRcc72aCRzEWrmP2Q=

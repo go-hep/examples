@@ -3,8 +3,6 @@ module github.com/go-hep/examples
 go 1.13
 
 require (
-	github.com/go-hep/croot v0.0.0-20180530150216-2dce8cdaab80
-	github.com/go-hep/random v0.0.0-20140624161735-ebaea20818e0
 	go-hep.org/x/hep v0.23.1
 	golang.org/x/exp v0.0.0-20200228211341-fcea875c7e85
 	gonum.org/v1/gonum v0.7.0

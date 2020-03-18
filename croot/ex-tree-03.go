@@ -1,3 +1,9 @@
+// Copyright 2020 The go-hep Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// +build ignore
+
 package main
 
 import (
@@ -15,7 +21,7 @@ type Det struct {
 type Event struct {
 	I int64
 	A Det
-	S []float64
+	B Det
 }
 
 var evtmax *int64 = flag.Int64("evtmax", 10000, "number of events to read")
@@ -43,7 +49,8 @@ func tree0(f croot.File) {
 			fmt.Printf("ievt: %d\n", iev)
 			fmt.Printf("evt.a.e= %8.3f\n", e.A.E)
 			fmt.Printf("evt.a.t= %8.3f\n", e.A.T)
-			fmt.Printf("evt.s  = %v\n", e.S)
+			fmt.Printf("evt.b.e= %8.3f\n", e.B.E)
+			fmt.Printf("evt.b.t= %8.3f\n", e.B.T)
 		}
 	}
 }

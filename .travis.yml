@@ -1,0 +1,34 @@
+language: go
+go_import_path: github.com/go-hep/examples
+os:
+  - linux
+
+cache:
+ directories:
+   - $HOME/.cache/go-build
+   - $HOME/gopath/pkg/mod
+
+git:
+ depth: 10
+
+matrix:
+ fast_finish: true
+ include:
+   - go: 1.14.x
+   - go: 1.13.x
+   - go: master
+
+notifications:
+  email:
+    recipients:
+      - go.hep.dev@gmail.com
+    on_success: always
+    on_failure: always
+
+script:
+ - go get -d -t -v ./...
+ - GOARCH=386   go test -v ./...
+ - GOARCH=amd64 go test -v ./...
+
+after_success:
+ - bash <(curl -s https://codecov.io/bash)
