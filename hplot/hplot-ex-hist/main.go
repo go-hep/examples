@@ -3,8 +3,8 @@ package main
 import (
 	"image/color"
 	"log"
-	"math/rand"
 
+	"golang.org/x/exp/rand"
 	"gonum.org/v1/gonum/stat/distuv"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/vg"
@@ -18,9 +18,9 @@ func main() {
 
 	// Create a normal distribution.
 	dist := distuv.Normal{
-		Mu:     0,
-		Sigma:  1,
-		Source: rand.New(rand.NewSource(0)),
+		Mu:    0,
+		Sigma: 1,
+		Src:   rand.New(rand.NewSource(0)),
 	}
 
 	// Draw some random values from the standard
@@ -33,26 +33,20 @@ func main() {
 
 	// normalize histogram
 	area := 0.0
-	for _, bin := range hist.Binning().Bins() {
+	for _, bin := range hist.Binning.Bins {
 		area += bin.SumW() * bin.XWidth()
 	}
 	hist.Scale(1 / area)
 
 	// Make a plot and set its title.
-	p, err := hplot.New()
-	if err != nil {
-		log.Fatalf("error: %v\n", err)
-	}
+	p := hplot.New()
 	p.Title.Text = "Histogram"
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
 
 	// Create a histogram of our values drawn
 	// from the standard normal.
-	h, err := hplot.NewH1D(hist)
-	if err != nil {
-		log.Fatal(err)
-	}
+	h := hplot.NewH1D(hist)
 	h.Infos.Style = hplot.HInfoSummary
 	p.Add(h)
 
