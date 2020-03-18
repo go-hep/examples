@@ -67,12 +67,12 @@ func main() {
 	p.Add(plotter.NewGlyphBoxes())
 
 	// Save the plot to a PNG file.
-	if err := p.Save(15*vg.Centimeter, -1, "hist.png"); err != nil {
+	if err := p.Save(15*vg.Centimeter, -1, "testdata/ex-00-hist.png"); err != nil {
 		log.Fatal(err)
 	}
 
 	// Save the plot to a PDF file.
-	if err := p.Save(15*vg.Centimeter, -1, "hist.pdf"); err != nil {
+	if err := p.Save(15*vg.Centimeter, -1, "testdata/ex-00-hist.pdf"); err != nil {
 		log.Fatal(err)
 	}
 }
