@@ -1,3 +1,9 @@
+// Copyright 2020 The go-hep Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+// +build example
+
 package main
 
 import (
@@ -58,14 +64,15 @@ func main() {
 
 	// draw a grid
 	p.Add(hplot.NewGrid())
-
 	p.Add(plotter.NewGlyphBoxes())
+
 	// Save the plot to a PNG file.
-	if err := p.Save(-1, -1, "hist.png"); err != nil {
+	if err := p.Save(15*vg.Centimeter, -1, "hist.png"); err != nil {
 		log.Fatal(err)
 	}
+
 	// Save the plot to a PDF file.
-	if err := p.Save(-1, -1, "hist.pdf"); err != nil {
+	if err := p.Save(15*vg.Centimeter, -1, "hist.pdf"); err != nil {
 		log.Fatal(err)
 	}
 }
