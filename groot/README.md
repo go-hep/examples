@@ -49,3 +49,5 @@ groot: evt.a.t=    0.304
 groot: evt.b.e=    1.310
 groot: evt.b.t=    0.094
 ```
+
+![event](https://github.com/go-hep/examples/raw/master/groot/testdata/event.png)

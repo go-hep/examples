@@ -10,6 +10,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
 	"math/rand"
 
 	"go-hep.org/x/hep/groot"
@@ -64,6 +65,7 @@ func tree0(fname string, evtmax int64) error {
 	if err != nil {
 		return fmt.Errorf("could not create tree writer: %w", err)
 	}
+	defer tree.Close()
 
 	log.Printf("-- created tree %q:", tree.Name())
 	for i, b := range tree.Branches() {
@@ -75,11 +77,10 @@ func tree0(fname string, evtmax int64) error {
 			log.Printf("processing event %d...", i)
 		}
 		e.I = i
-		e.A.E = rand.NormFloat64()
-		e.B.E = rand.NormFloat64()
+		e.A.E, e.B.E = rannor()
 
 		e.A.T = rand.Float64()
-		e.B.T = e.A.T * rand.NormFloat64()
+		e.B.T = e.A.T + rand.NormFloat64()*0.1
 
 		if i%1000 == 0 {
 			log.Printf("evt.i=   %8d", e.I)
@@ -105,4 +106,14 @@ func tree0(fname string, evtmax int64) error {
 	}
 
 	return nil
+}
+
+func rannor() (float64, float64) {
+	y := rand.Float64()
+	z := rand.Float64()
+	x := z * 2 * math.Pi
+	r := math.Sqrt(-2 * math.Log(y))
+	a := r * math.Sin(x)
+	b := r * math.Cos(x)
+	return a, b
 }
