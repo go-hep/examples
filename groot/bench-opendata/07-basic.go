@@ -78,16 +78,14 @@ func basic7(fname string) error {
 		}
 
 		var (
-			jets    []int
-			muJets  = goodJets(jetPt, jetEta, jetPhi, muPt, muEta, muPhi)
-			eleJets = goodJets(jetPt, jetEta, jetPhi, elePt, eleEta, elePhi)
+			jets = goodJets(
+				jetPt, jetEta, jetPhi,
+				elePt, eleEta, elePhi,
+				muPt, muEta, muPhi,
+			)
 		)
-		switch {
-		case len(muJets) > 0:
-			jets = muJets
-		case len(eleJets) > 0:
-			jets = eleJets
-		default:
+
+		if len(jets) == 0 {
 			continue
 		}
 
@@ -117,30 +115,42 @@ func basic7(fname string) error {
 	return nil
 }
 
-func goodJets(pt1, eta1, phi1, pt2, eta2, phi2 []float32) []int {
+func goodJets(pt1, eta1, phi1, pt2, eta2, phi2, pt3, eta3, phi3 []float32) []int {
 	const (
-		twopi  = 2 * math.Pi
 		dr2Min = 0.4 * 0.4
 	)
 
-	var jets = make([]int, 0, len(pt1))
-
+	jets := make([]int, 0, len(pt1))
 	for ijet, jetPt := range pt1 {
 		if jetPt <= 30 {
 			continue
 		}
-		for ilep, lepPt := range pt2 {
-			if lepPt <= 10 {
-				continue
-			}
-			dphi := -math.Remainder(float64(phi1[ijet]-phi2[ilep]), twopi)
-			deta := float64(eta1[ijet] - eta2[ilep])
-			dr2 := dphi*dphi + deta*deta
-			if dr2 > dr2Min {
-				jets = append(jets, ijet)
-			}
+		dr2 := math.Min(
+			jetIsol(ijet, pt1, eta1, phi1, pt2, eta2, phi2),
+			jetIsol(ijet, pt1, eta1, phi1, pt3, eta3, phi3),
+		)
+		if dr2 > dr2Min {
+			// jet is isolated.
+			jets = append(jets, ijet)
 		}
 	}
 
 	return jets
+}
+
+func jetIsol(ijet int, pt1, eta1, phi1, pt2, eta2, phi2 []float32) float64 {
+	const (
+		twopi = 2 * math.Pi
+	)
+
+	dr2 := math.Inf(+1)
+	for ilep, lepPt := range pt2 {
+		if lepPt <= 10 {
+			continue
+		}
+		dphi := -math.Remainder(float64(phi1[ijet]-phi2[ilep]), twopi)
+		deta := float64(eta1[ijet] - eta2[ilep])
+		dr2 = math.Min(dphi*dphi+deta*deta, dr2)
+	}
+	return dr2
 }
