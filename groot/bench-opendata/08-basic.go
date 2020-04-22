@@ -92,12 +92,20 @@ func basic8(fname string) error {
 		}
 
 		var (
-			imu1, imu2   = findLeptonPair(muPt, muEta, muPhi, muMass, muCharge)
-			iele1, iele2 = findLeptonPair(elePt, eleEta, elePhi, eleMass, eleCharge)
+			imu1,  imu2,  dmu  = findLeptonPair(muPt,  muEta,  muPhi,  muMass,  muCharge)
+			iele1, iele2, dele = findLeptonPair(elePt, eleEta, elePhi, eleMass, eleCharge)
 		)
 
 		if imu1 < 0 && iele1 < 0 {
 			continue
+		}
+
+		if dmu < dele {
+			iele1 = -1
+			iele2 = -1
+		} else {
+			imu1 = -1
+			imu2 = -1
 		}
 
 		var lepPt float32
@@ -163,22 +171,22 @@ func basic8(fname string) error {
 	return nil
 }
 
-func findLeptonPair(pt, eta, phi, mass []float32, charge []int32) (int, int) {
+func findLeptonPair(pt, eta, phi, mass []float32, charge []int32) (int, int, float64) {
 	const (
 		zMass = 91.2 // or take it from go-hep.org/x/hep/heppdt.PDT[id].Particle.Mass
 	)
 
 	cand := struct {
-		m      float64
+		d      float64
 		i1, i2 int
 	}{
-		m:  math.MaxFloat64,
+		d:  math.MaxFloat64,
 		i1: -1,
 		i2: -1,
 	}
 
 	if len(pt) < 2 {
-		return cand.i1, cand.i2
+		return cand.i1, cand.i2, cand.d
 	}
 
 	makePtEtaPhiM := func(i int) fmom.PtEtaPhiM {
@@ -195,12 +203,13 @@ func findLeptonPair(pt, eta, phi, mass []float32, charge []int32) (int, int) {
 		p1 := makePtEtaPhiM(i1)
 		p2 := makePtEtaPhiM(i2)
 		mll := fmom.InvMass(&p1, &p2)
-		if math.Abs(mll-zMass) < math.Abs(cand.m-zMass) {
-			cand.m = mll
+		d := math.Abs(mll-zMass)
+		if d < cand.d {
+			cand.d = d
 			cand.i1 = i1
 			cand.i2 = i2
 		}
 	}
 
-	return cand.i1, cand.i2
+	return cand.i1, cand.i2, cand.d
 }
